@@ -12,10 +12,15 @@ import (
 type ICommentService interface {
 	Create(comment *models.Comment) (string, error)
 	DeleteAll(org string) (int64, error)
+	GetAllBy(org string) ([]*Comment, error)
 }
 
 type CommentService struct {
 	CommentRepository repositories.ICommentsRepository
+}
+
+type Comment struct {
+	Comment string
 }
 
 func NewCommentService(commentRepository repositories.ICommentsRepository) *CommentService {
@@ -24,6 +29,32 @@ func NewCommentService(commentRepository repositories.ICommentsRepository) *Comm
 	}
 }
 
+// Get all by org return Array of comment and error
+func (o *CommentService) GetAllBy(org string) ([]*Comment, error) {
+	results, err := o.CommentRepository.GetAll(org)
+
+	if err != nil {
+		log.Errorf("%v", err)
+		return nil, err
+	}
+
+	// return empty array instead of null
+	if len(results) == 0 {
+		return make([]*Comment, 0), nil
+	}
+
+	var comments []*Comment
+
+	for _, model := range results {
+		comments = append(comments, &Comment{
+			Comment: model.Comment,
+		})
+	}
+
+	return comments, nil
+}
+
+// Create comment return doc id and error
 func (o *CommentService) Create(comment *models.Comment) (string, error) {
 	result, err := o.CommentRepository.Create(comment)
 
@@ -41,6 +72,7 @@ func (o *CommentService) Create(comment *models.Comment) (string, error) {
 	return "", nil
 }
 
+// Delete all comment by org return total number of updated docs and error
 func (o *CommentService) DeleteAll(org string) (int64, error) {
 	result, err := o.CommentRepository.DeleteAll(org)
 

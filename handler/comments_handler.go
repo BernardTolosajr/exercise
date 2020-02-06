@@ -25,6 +25,35 @@ type DeleteCommentResponse struct {
 	Message string `json:"message,omitempty"`
 }
 
+type CommentsResponse struct {
+	Comments []*services.Comment `json:"comments"`
+	Message  string              `json:"message,omitempty"`
+}
+
+func GetCommentsHandler(service services.ICommentService) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// get the query path
+		vars := mux.Vars(r)
+		org := vars["name"]
+
+		results, err := service.GetAllBy(org)
+
+		response := &CommentsResponse{}
+
+		if err != nil {
+			log.Errorf("error on creating comment %v", err)
+			w.WriteHeader(http.StatusUnprocessableEntity)
+			response.Message = err.Error()
+			json.NewEncoder(w).Encode(response)
+		}
+
+		w.WriteHeader(http.StatusOK)
+		response.Comments = results
+		json.NewEncoder(w).Encode(response)
+	}
+}
+
+// Delete Comment Handler handle deleting of comments
 func DeleteCommentsHandler(service services.ICommentService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -52,6 +81,7 @@ func DeleteCommentsHandler(service services.ICommentService) http.HandlerFunc {
 	}
 }
 
+// Post Comment Handler handle creating new comments
 func PostCommentsHandler(service services.ICommentService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

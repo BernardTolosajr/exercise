@@ -75,3 +75,35 @@ func TestCommentServiceDeleteAllWhenFailed(t *testing.T) {
 
 	assert.Equal(t, "ops", err.Error())
 }
+
+func TestCommentServiceGetAllWhenSuccessReturnArrayOfComment(t *testing.T) {
+	org := "foo"
+
+	mock := repositories.CommentRepositoryMock{}
+
+	comments := []*models.Comment{&models.Comment{Comment: "foo"}}
+
+	mock.On("GetAll", org).Return(comments, nil)
+
+	service := NewCommentService(&mock)
+
+	results, _ := service.GetAllBy(org)
+
+	assert.Equal(t, 1, len(results))
+}
+
+func TestCommentServiceGetAllWhenFailedReturnEmptyArray(t *testing.T) {
+	org := "foo"
+
+	mock := repositories.CommentRepositoryMock{}
+
+	comments := []*models.Comment{}
+
+	mock.On("GetAll", org).Return(comments, nil)
+
+	service := NewCommentService(&mock)
+
+	results, _ := service.GetAllBy(org)
+
+	assert.Equal(t, 0, len(results))
+}

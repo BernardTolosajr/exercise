@@ -18,3 +18,8 @@ func (m *CommentRepositoryMock) DeleteAll(org string) (interface{}, error) {
 	args := m.Called(org)
 	return args.Get(0), args.Error(1)
 }
+
+func (m *CommentRepositoryMock) GetAll(org string) ([]*models.Comment, error) {
+	args := m.Called(org)
+	return args.Get(0).([]*models.Comment), args.Error(1)
+}

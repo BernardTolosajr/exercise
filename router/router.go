@@ -21,6 +21,7 @@ func New(mongoDB *db.MongoDB) *mux.Router {
 	})
 
 	r.Handle("/orgs", handler.PostOrganizationHandler(organizationService)).Methods("POST")
+	r.Handle("/orgs/{name}/comments", handler.GetCommentsHandler(commentService)).Methods("GET")
 	r.Handle("/orgs/{name}/comments", handler.PostCommentsHandler(commentService)).Methods("POST")
 	r.Handle("/orgs/{name}/comments", handler.DeleteCommentsHandler(commentService)).Methods("DELETE")
 
