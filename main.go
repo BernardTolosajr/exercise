@@ -11,8 +11,10 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"github.com/exercise/db"
 	"github.com/exercise/router"
 	"github.com/google/go-github/v29/github"
+	negronilogrus "github.com/meatballhat/negroni-logrus"
 	"github.com/urfave/negroni"
 	"golang.org/x/oauth2"
 )
@@ -43,10 +45,12 @@ func foo() {
 }
 
 func main() {
-	r := router.New()
+	mongoDB := db.NewMongoDB("mongodb://localhost:27017", "thegithub")
+
+	r := router.New(mongoDB)
 
 	n := negroni.New()
-
+	n.Use(negronilogrus.NewMiddleware())
 	n.UseHandler(r)
 
 	srv := &http.Server{
