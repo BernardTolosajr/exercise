@@ -20,7 +20,7 @@ type CommentsRepository struct {
 	MongoDB *db.MongoDB
 }
 
-// Get all coments by or
+// Get all coments by org return array of Comment and error
 func (o *CommentsRepository) GetAll(org string) ([]*models.Comment, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -57,7 +57,7 @@ func (o *CommentsRepository) GetAll(org string) ([]*models.Comment, error) {
 	return results, nil
 }
 
-// Create comment
+// Create comment return interface and error
 func (o *CommentsRepository) Create(comment *models.Comment) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -68,14 +68,13 @@ func (o *CommentsRepository) Create(comment *models.Comment) (interface{}, error
 	result, err := o.MongoDB.CommentCollection.InsertOne(ctx, comment)
 
 	if err != nil {
-		log.Printf("error on create %v", err)
 		return nil, err
 	}
 
 	return result.InsertedID, nil
 }
 
-// Delete all comment by org
+// Delete all comment by org return interface and error
 func (o *CommentsRepository) DeleteAll(org string) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
