@@ -7,38 +7,40 @@ import (
 
 	"github.com/exercise/models"
 	"github.com/exercise/services"
+	"github.com/gorilla/mux"
 )
 
-type OrganizationRequest struct {
-	Login       string `json:"login"`
-	ProfileName string `json:"profile_name"`
-	Admin       string `json:"admin"`
+type CommentRequest struct {
+	Comment string `json:"comment"`
 }
 
-type OrganizationResponse struct {
+type CommentResponse struct {
 	Id      string `json:"id,omitempty"`
 	Code    string `json:"code,omitempty"`
 	Message string `json:"message,omitempty"`
 }
 
-func OrganizationHandler(service services.IOrganizationService) http.HandlerFunc {
+func PostCommentsHandler(service services.ICommentService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
-		request := OrganizationRequest{}
+		request := CommentRequest{}
 
 		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 			log.Printf("error parsing request %v", err)
 			panic(err)
 		}
 
-		id, err := service.Create(&models.Organization{
-			Login:       request.Login,
-			ProfileName: request.ProfileName,
-			Admin:       request.Admin,
+		// get the query path
+		vars := mux.Vars(r)
+		org := vars["name"]
+
+		id, err := service.Create(&models.Comment{
+			Org:     org,
+			Comment: request.Comment,
 		})
 
-		response := &OrganizationResponse{}
+		response := &CommentResponse{}
 
 		if err != nil {
 			w.WriteHeader(http.StatusUnprocessableEntity)
@@ -49,7 +51,7 @@ func OrganizationHandler(service services.IOrganizationService) http.HandlerFunc
 
 		if id == "" {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			response.Message = "Something went wrong."
+			response.Message = "Something went wrong on creating comment."
 		}
 
 		response.Id = id

@@ -17,7 +17,7 @@ func TestServiceReturnCreatedId(t *testing.T) {
 		Login: "login name",
 	}).Return(primitive.NewObjectID(), nil)
 
-	service := NewOrganizationService(&mock)
+	service := NewOrganization(&mock)
 
 	id, _ := service.Create(&models.Organization{
 		Login: "login name",
@@ -37,7 +37,7 @@ func TestServiceWillNotCreateId(t *testing.T) {
 		Login: "login name",
 	}).Return(nil, errors.New("some error found"))
 
-	service := NewOrganizationService(&mock)
+	service := NewOrganization(&mock)
 
 	id, _ := service.Create(&models.Organization{
 		Login: "login name",

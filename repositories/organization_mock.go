@@ -13,3 +13,7 @@ func (m *OrganizationRepositoryMock) Create(organization *models.Organization) (
 	args := m.Called(organization)
 	return args.Get(0), args.Error(1)
 }
+
+func (m *OrganizationRepositoryMock) FindOne(login string) (*models.Organization, error) {
+	return nil, nil
+}

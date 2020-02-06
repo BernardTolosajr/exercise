@@ -12,6 +12,7 @@ import (
 type MongoDB struct {
 	Client                 *mongo.Client
 	OrganizationCollection *mongo.Collection
+	CommentCollection      *mongo.Collection
 }
 
 // New mongoDB setup new mongo client
@@ -38,9 +39,11 @@ func NewMongoDB(host string, database string) *MongoDB {
 
 	// setup database and collections
 	organizations := client.Database(database).Collection("organizations")
+	comments := client.Database(database).Collection("comments")
 
 	return &MongoDB{
 		Client:                 client,
 		OrganizationCollection: organizations,
+		CommentCollection:      comments,
 	}
 }

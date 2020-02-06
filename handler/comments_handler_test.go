@@ -9,31 +9,38 @@ import (
 
 	"github.com/exercise/models"
 	"github.com/exercise/services"
+	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateNewOrganizationSuccessHandler(t *testing.T) {
-	org := &models.Organization{
-		Login:       "foo",
-		ProfileName: "bar",
-		Admin:       "admin",
+func TestCreateNewCommentsHandlerWhenSuccess(t *testing.T) {
+	comment := &models.Comment{
+		Org:     "foo",
+		Comment: "bar",
 	}
 
-	payload := []byte(`{"login":"foo","profile_name":"bar","admin":"admin"}`)
-	req, err := http.NewRequest("POST", "/organizations", bytes.NewBuffer(payload))
+	payload := []byte(`{"comment":"bar"}`)
+	req, err := http.NewRequest("POST", "/orgs/foo/comments", bytes.NewBuffer(payload))
 
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	//setup mock service
-	mock := &services.OrganizationServiceMock{}
+	//Hack to fake gorilla/mux vars
+	vars := map[string]string{
+		"name": "foo",
+	}
 
-	mock.On("Create", org).Return("1", nil)
+	req = mux.SetURLVars(req, vars)
+
+	//setup mock service
+	mock := &services.CommentServiceMock{}
+
+	mock.On("Create", comment).Return("1", nil)
 
 	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(OrganizationHandler(mock))
+	handler := http.HandlerFunc(PostCommentsHandler(mock))
 
 	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
 	// directly and pass in our Request and ResponseRecorder.
@@ -42,29 +49,37 @@ func TestCreateNewOrganizationSuccessHandler(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rr.Code)
 	// Check the response body is what we expect.
 	assert.Equal(t, "{\"id\":\"1\"}\n", rr.Body.String())
-	mock.AssertCalled(t, "Create", org)
+	mock.AssertCalled(t, "Create", comment)
 }
 
-func TestCreateNewOrganizationFailedHandler(t *testing.T) {
-	payload := []byte(`{"login":"foo","profile_name":"bar","admin":"admin"}`)
-	req, err := http.NewRequest("POST", "/organizations", bytes.NewBuffer(payload))
+func TestCreateNewCommentsHandlerWhenFailed(t *testing.T) {
+	comment := &models.Comment{
+		Org:     "foo",
+		Comment: "bar",
+	}
+
+	payload := []byte(`{"comment":"bar"}`)
+	req, err := http.NewRequest("POST", "/orgs/foo/comments", bytes.NewBuffer(payload))
 
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	//setup mock service
-	mock := &services.OrganizationServiceMock{}
+	//Hack to fake gorilla/mux vars
+	vars := map[string]string{
+		"name": "foo",
+	}
 
-	mock.On("Create", &models.Organization{
-		Login:       "foo",
-		ProfileName: "bar",
-		Admin:       "admin",
-	}).Return("", errors.New("something happend"))
+	req = mux.SetURLVars(req, vars)
+
+	//setup mock service
+	mock := &services.CommentServiceMock{}
+
+	mock.On("Create", comment).Return("", errors.New("something happend"))
 
 	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(OrganizationHandler(mock))
+	handler := http.HandlerFunc(PostCommentsHandler(mock))
 
 	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
 	// directly and pass in our Request and ResponseRecorder.

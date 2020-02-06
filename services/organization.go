@@ -16,13 +16,19 @@ type OrganizationService struct {
 	OrganizationRepository repositories.IOrganizationRepository
 }
 
-func NewOrganizationService(organizationRepository repositories.IOrganizationRepository) *OrganizationService {
+func NewOrganization(organizationRepository repositories.IOrganizationRepository) *OrganizationService {
 	return &OrganizationService{
 		OrganizationRepository: organizationRepository,
 	}
 }
 
 func (o *OrganizationService) Create(org *models.Organization) (string, error) {
+	existingOrg, _ := o.OrganizationRepository.FindOne(org.Login)
+
+	if existingOrg != nil {
+		return "", errors.New("Organization already exist.")
+	}
+
 	result, err := o.OrganizationRepository.Create(org)
 
 	if err != nil {
