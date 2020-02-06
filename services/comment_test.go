@@ -47,3 +47,31 @@ func TestCommentServiceCreateNewCommentWhenFailed(t *testing.T) {
 
 	assert.Equal(t, "", id)
 }
+
+func TestCommentServiceDeleteAllWhenSuccess(t *testing.T) {
+	org := "foo"
+
+	mock := repositories.CommentRepositoryMock{}
+
+	mock.On("DeleteAll", org).Return(int64(1), nil)
+
+	service := NewCommentService(&mock)
+
+	result, _ := service.DeleteAll(org)
+
+	assert.Equal(t, int64(1), result)
+}
+
+func TestCommentServiceDeleteAllWhenFailed(t *testing.T) {
+	org := "foo"
+
+	mock := repositories.CommentRepositoryMock{}
+
+	mock.On("DeleteAll", org).Return(0, errors.New("ops"))
+
+	service := NewCommentService(&mock)
+
+	_, err := service.DeleteAll(org)
+
+	assert.Equal(t, "ops", err.Error())
+}

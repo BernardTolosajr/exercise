@@ -5,11 +5,13 @@ import (
 
 	"github.com/exercise/models"
 	"github.com/exercise/repositories"
+	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ICommentService interface {
 	Create(comment *models.Comment) (string, error)
+	DeleteAll(org string) (int64, error)
 }
 
 type CommentService struct {
@@ -37,4 +39,15 @@ func (o *CommentService) Create(comment *models.Comment) (string, error) {
 	}
 
 	return "", nil
+}
+
+func (o *CommentService) DeleteAll(org string) (int64, error) {
+	result, err := o.CommentRepository.DeleteAll(org)
+
+	if err != nil {
+		log.Errorf("error on updating comment %v", err)
+		return 0, err
+	}
+
+	return result.(int64), err
 }

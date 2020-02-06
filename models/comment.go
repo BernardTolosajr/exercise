@@ -1,9 +1,11 @@
 package models
 
+import "time"
+
 type Comment struct {
 	Org          string
 	Comment      string
-	DateCreated  string
-	DateModified string
+	DateCreated  time.Time
+	DateModified time.Time
 	DateDeleted  string
 }

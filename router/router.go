@@ -22,15 +22,7 @@ func New(mongoDB *db.MongoDB) *mux.Router {
 
 	r.Handle("/orgs", handler.PostOrganizationHandler(organizationService)).Methods("POST")
 	r.Handle("/orgs/{name}/comments", handler.PostCommentsHandler(commentService)).Methods("POST")
-
-	return r
-}
-
-// New create instance of mux router with mongoDB
-func NewWithService(commentService services.ICommentService) *mux.Router {
-	r := mux.NewRouter()
-
-	r.Handle("/orgs/{name}/comments", handler.PostCommentsHandler(commentService)).Methods("POST")
+	r.Handle("/orgs/{name}/comments", handler.DeleteCommentsHandler(commentService)).Methods("DELETE")
 
 	return r
 }

@@ -13,3 +13,8 @@ func (m *CommentRepositoryMock) Create(comment *models.Comment) (interface{}, er
 	args := m.Called(comment)
 	return args.Get(0), args.Error(1)
 }
+
+func (m *CommentRepositoryMock) DeleteAll(org string) (interface{}, error) {
+	args := m.Called(org)
+	return args.Get(0), args.Error(1)
+}
