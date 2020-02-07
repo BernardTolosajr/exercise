@@ -2,6 +2,7 @@ package handler
 
 import (
 	"bytes"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -54,6 +55,44 @@ func TestCreateNewMemberHandlerWhenSuccess(t *testing.T) {
 	mock.AssertCalled(t, "Create", member)
 }
 
+func TestCreateNewMemberHandlerWhenFailed(t *testing.T) {
+	org := "foo"
+
+	member := &models.Member{
+		Org:   org,
+		Login: "bar",
+	}
+
+	payload := []byte(`{"login":"bar"}`)
+	req, err := http.NewRequest("POST", "/orgs/foo/members", bytes.NewBuffer(payload))
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//Hack to fake gorilla/mux vars
+	vars := map[string]string{
+		"name": org,
+	}
+
+	req = mux.SetURLVars(req, vars)
+
+	//setup mock service
+	mock := &services.MemberServiceMock{}
+
+	mock.On("Create", member).Return("1", errors.New("ops"))
+
+	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(PostMemberHandler(mock))
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
+}
+
 func TestGetMemberHandlerWhenSuccessReturnArrayOfMember(t *testing.T) {
 	org := "foo"
 	req, err := http.NewRequest("GET", "/orgs/foo/members", nil)
@@ -95,6 +134,41 @@ func TestGetMemberHandlerWhenSuccessReturnArrayOfMember(t *testing.T) {
 	assert.Equal(t, expected, rr.Body.String())
 	// make sure our depedency is called with correct parameter
 	mock.AssertCalled(t, "GetAllBy", org)
+}
+
+func TestGetMemberHandlerWhenFailed(t *testing.T) {
+	org := "foo"
+	req, err := http.NewRequest("GET", "/orgs/foo/members", nil)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//Hack to fake gorilla/mux vars
+	vars := map[string]string{
+		"name": org,
+	}
+
+	req = mux.SetURLVars(req, vars)
+
+	//setup mock service
+	mock := &services.MemberServiceMock{}
+
+	members := []*services.MemberView{&services.MemberView{
+		Org: "theorg",
+	}}
+
+	mock.On("GetAllBy", org).Return(members, errors.New("ops"))
+
+	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(GetMembersHandler(mock))
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
 }
 
 func TestGetMemberHandlerWhenSuccessReturnEmptyMember(t *testing.T) {
