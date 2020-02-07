@@ -45,3 +45,19 @@ func TestMemberServiceCreateNewCommentWhenFailed(t *testing.T) {
 
 	assert.Equal(t, "ops", err.Error())
 }
+
+func TestMemberServiceGetAllWhenSuccessReturnArrayOfMember(t *testing.T) {
+	org := "foo"
+
+	mock := repositories.MemberRepositoryMock{}
+
+	comments := []*models.Member{&models.Member{Login: "foo"}}
+
+	mock.On("GetAllby", org).Return(comments, nil)
+
+	service := NewMemberService(&mock)
+
+	results, _ := service.GetAllBy(org)
+
+	assert.Equal(t, 1, len(results))
+}

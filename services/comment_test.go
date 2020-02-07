@@ -29,6 +29,38 @@ func TestCommentServiceCreateNewCommentWhenSuccess(t *testing.T) {
 	assert.Equal(t, 24, len(id))
 }
 
+func TestCommentServiceCreateNewCommentEmptyResult(t *testing.T) {
+	mock := repositories.CommentRepositoryMock{}
+
+	comment := &models.Comment{
+		Org:     "foo",
+		Comment: "bar",
+	}
+
+	mock.On("Create", comment).Return(nil, nil)
+
+	service := NewCommentService(&mock)
+
+	id, _ := service.Create(comment)
+	assert.Equal(t, "", id)
+}
+
+func TestCommentServiceCreateNewCommentWrongObjectId(t *testing.T) {
+	mock := repositories.CommentRepositoryMock{}
+
+	comment := &models.Comment{
+		Org:     "foo",
+		Comment: "bar",
+	}
+
+	mock.On("Create", comment).Return("some", nil)
+
+	service := NewCommentService(&mock)
+
+	id, _ := service.Create(comment)
+	assert.Equal(t, "", id)
+}
+
 func TestCommentServiceCreateNewCommentWhenFailed(t *testing.T) {
 	mock := repositories.CommentRepositoryMock{}
 
@@ -106,4 +138,18 @@ func TestCommentServiceGetAllWhenFailedReturnEmptyArray(t *testing.T) {
 	results, _ := service.GetAllBy(org)
 
 	assert.Equal(t, 0, len(results))
+}
+
+func TestCommentServiceGetAllWhenFailedReturnError(t *testing.T) {
+	org := "foo"
+
+	mock := repositories.CommentRepositoryMock{}
+
+	mock.On("GetAll", org).Return([]*models.Comment{}, errors.New("ops"))
+
+	service := NewCommentService(&mock)
+
+	_, err := service.GetAllBy(org)
+
+	assert.Equal(t, "ops", err.Error())
 }
