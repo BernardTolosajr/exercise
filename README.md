@@ -1,6 +1,7 @@
 # The Exercise API
 
 [![Test Status](https://github.com/BernardTolosajr/exercise/workflows/Go/badge.svg)](https://github.com/BernardTolosajr/exercise/actions?query=workflow%3AGo)
+[![codecov](https://codecov.io/gh/BernardTolosajr/exercise/branch/master/graph/badge.svg)](https://codecov.io/gh/BernardTolosajr/exercise)
 
 It an exercise using golang, mux, mongodb and kubernetes
 ###### Hackmd link (https://hackmd.io/TPctUBDiRtKr3i5yJK3eOQ?both)
