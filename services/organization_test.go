@@ -32,6 +32,42 @@ func TestServiceReturnCreatedId(t *testing.T) {
 	assert.Equal(t, 24, len(id))
 }
 
+func TestServiceReturnCreatedReturnError(t *testing.T) {
+	login := "login name"
+	mock := repositories.OrganizationRepositoryMock{}
+
+	mock.On("FindOne", login).Return(nil, nil)
+	mock.On("Create", &models.Organization{
+		Login: login,
+	}).Return(nil, errors.New("ops"))
+
+	service := NewOrganization(&mock)
+
+	_, err := service.Create(&models.Organization{
+		Login: login,
+	})
+
+	assert.Equal(t, "ops", err.Error())
+}
+
+func TestServiceReturnCreatedReturnWrongObjectId(t *testing.T) {
+	login := "login name"
+	mock := repositories.OrganizationRepositoryMock{}
+
+	mock.On("FindOne", login).Return(nil, nil)
+	mock.On("Create", &models.Organization{
+		Login: login,
+	}).Return("1", nil)
+
+	service := NewOrganization(&mock)
+
+	id, _ := service.Create(&models.Organization{
+		Login: login,
+	})
+
+	assert.Equal(t, "", id)
+}
+
 func TestServiceReturnAlreadExist(t *testing.T) {
 	login := "login"
 	mock := repositories.OrganizationRepositoryMock{}
