@@ -48,7 +48,7 @@ http post localhost:8080/orgs login=userlogin profile_name=profile admin=admin
 }
 ```
 ### Create a Comment
-##### POST http://localhost:8080/orgs/<org-name>/comments
+##### POST http://localhost:8080/orgs/{org-name}/comments
 ##### Parameter
 | Name | Type | Description |
 | -------- | -------- | -------- |
@@ -71,7 +71,7 @@ http post localhost:8080/orgs/xendit/comments comment=awesome member_id=1
 }
 ```
 ### Get a Comments
-##### GET http://localhost:8080/orgs/<org-name>/comments
+##### GET http://localhost:8080/orgs/{org-name}/comments
 ##### httpie command
 ```
 http get localhost:8080/orgs/xendit/comments
@@ -92,7 +92,7 @@ http get localhost:8080/orgs/xendit/comments
 }
 ```
 ### Delete an Comments
-##### DELETE http://localhost:8080/orgs/<org-name>/comments
+##### DELETE http://localhost:8080/orgs/{org-name}/comments
 ##### httpie command
 ```
 http delete localhost:8080/orgs/xendit/comments
@@ -108,7 +108,7 @@ http delete localhost:8080/orgs/xendit/comments
 }
 ```
 ### Create an Member
-##### POST http://localhost:8080/orgs/<org-name>/members
+##### POST http://localhost:8080/orgs/{org-name}/members
 ##### Parameter
 | Name | Type | Description |
 | -------- | -------- | -------- |
@@ -131,7 +131,7 @@ http post localhost:8080/orgs/xendit/members login=bt avatar_url=http://foo
 }
 ```
 ### Get an organizatin members
-##### GET http://localhost:8080/orgs/<org-name>/members
+##### GET http://localhost:8080/orgs/{org-name}/members
 ##### httpie command
 ```
 http localhost:8080/orgs/xendit/members
