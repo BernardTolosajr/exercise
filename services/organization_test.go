@@ -39,15 +39,15 @@ func TestServiceReturnCreatedReturnError(t *testing.T) {
 	mock.On("FindOne", login).Return(nil, nil)
 	mock.On("Create", &models.Organization{
 		Login: login,
-	}).Return(nil, errors.New("ops"))
+	}).Return(nil, nil)
 
 	service := NewOrganization(&mock)
 
-	_, err := service.Create(&models.Organization{
+	id, _ := service.Create(&models.Organization{
 		Login: login,
 	})
 
-	assert.Equal(t, "ops", err.Error())
+	assert.Equal(t, "", id)
 }
 
 func TestServiceReturnCreatedReturnWrongObjectId(t *testing.T) {
@@ -61,11 +61,11 @@ func TestServiceReturnCreatedReturnWrongObjectId(t *testing.T) {
 
 	service := NewOrganization(&mock)
 
-	id, _ := service.Create(&models.Organization{
+	_, err := service.Create(&models.Organization{
 		Login: login,
 	})
 
-	assert.Equal(t, "", id)
+	assert.Equal(t, "Unable to cast ObjectId", err.Error())
 }
 
 func TestServiceReturnAlreadExist(t *testing.T) {
