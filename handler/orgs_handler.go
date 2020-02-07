@@ -9,6 +9,10 @@ import (
 	"github.com/exercise/services"
 )
 
+// Member request
+//	Login - The Organization username
+//  Admin - The login of the user who will manage this organization
+// 	ProfileName - The organization's display name.
 type OrganizationRequest struct {
 	Login       string `json:"login"`
 	ProfileName string `json:"profile_name"`
@@ -21,6 +25,7 @@ type OrganizationResponse struct {
 	Message string `json:"message,omitempty"`
 }
 
+// TODO move the handler to struct fo better structure
 // OrganizationHandler handles the creation of new organization
 func PostOrganizationHandler(service services.IOrganizationService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

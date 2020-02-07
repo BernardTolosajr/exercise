@@ -10,6 +10,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Comment request
+//	MemberId - The member Id
+//  Comment - The comment
 type CommentRequest struct {
 	MemberId string `json:"member_id"`
 	Comment  string `json:"comment"`
@@ -31,6 +34,7 @@ type CommentsResponse struct {
 	Message  string              `json:"message,omitempty"`
 }
 
+// TODO move the handler to struct fo better structure
 func GetCommentsHandler(service services.ICommentService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// get the query path
@@ -42,7 +46,7 @@ func GetCommentsHandler(service services.ICommentService) http.HandlerFunc {
 		response := &CommentsResponse{}
 
 		if err != nil {
-			log.Errorf("error on creating comment %v", err)
+			log.Errorf("error on fetching comment %v", err)
 			w.WriteHeader(http.StatusUnprocessableEntity)
 			response.Message = err.Error()
 			json.NewEncoder(w).Encode(response)
