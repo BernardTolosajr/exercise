@@ -19,6 +19,7 @@ type CommentService struct {
 	CommentRepository repositories.ICommentsRepository
 }
 
+// Comment view
 type Comment struct {
 	Comment string
 }

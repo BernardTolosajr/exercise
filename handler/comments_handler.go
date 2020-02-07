@@ -11,7 +11,8 @@ import (
 )
 
 type CommentRequest struct {
-	Comment string `json:"comment"`
+	MemberId string `json:"member_id"`
+	Comment  string `json:"comment"`
 }
 
 type CommentResponse struct {
@@ -98,8 +99,9 @@ func PostCommentsHandler(service services.ICommentService) http.HandlerFunc {
 		org := vars["name"]
 
 		id, err := service.Create(&models.Comment{
-			Org:     org,
-			Comment: request.Comment,
+			Org:      org,
+			Comment:  request.Comment,
+			MemberId: request.MemberId,
 		})
 
 		response := &CommentResponse{}

@@ -55,11 +55,12 @@ func TestCreateNewCommentsHandlerWhenSuccess(t *testing.T) {
 
 func TestCreateNewCommentsHandlerWhenFailed(t *testing.T) {
 	comment := &models.Comment{
-		Org:     "foo",
-		Comment: "bar",
+		Org:      "foo",
+		Comment:  "bar",
+		MemberId: "1",
 	}
 
-	payload := []byte(`{"comment":"bar"}`)
+	payload := []byte(`{"comment":"bar","member_id":"1"}`)
 	req, err := http.NewRequest("POST", "/orgs/foo/comments", bytes.NewBuffer(payload))
 
 	if err != nil {

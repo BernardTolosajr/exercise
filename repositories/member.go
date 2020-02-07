@@ -13,6 +13,7 @@ import (
 
 type IMembersRepository interface {
 	Create(comment *models.Member) (interface{}, error)
+	GetAllby(org string) ([]*models.Member, error)
 }
 
 type MembersRepository struct {
