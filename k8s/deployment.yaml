@@ -1,8 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: login-svc-ap-deployment
-  namespace: cluster4
+  name: chatter-deployment
 spec:
   replicas: 2
   selector:
