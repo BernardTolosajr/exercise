@@ -15,5 +15,9 @@ func (m *OrganizationRepositoryMock) Create(organization *models.Organization) (
 }
 
 func (m *OrganizationRepositoryMock) FindOne(login string) (*models.Organization, error) {
-	return nil, nil
+	args := m.Called(login)
+	if args.Get(0) != nil {
+		return args.Get(0).(*models.Organization), args.Error(1)
+	}
+	return nil, args.Error(1)
 }
