@@ -4,7 +4,7 @@ ENV GO111MODULE=on
 
 RUN apk add --no-cache git
 
-WORKDIR /svc
+WORKDIR /chatter
 
 COPY go.mod .
 COPY go.sum .

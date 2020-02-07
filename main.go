@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -13,36 +12,9 @@ import (
 
 	"github.com/exercise/db"
 	"github.com/exercise/router"
-	"github.com/google/go-github/v29/github"
 	negronilogrus "github.com/meatballhat/negroni-logrus"
 	"github.com/urfave/negroni"
-	"golang.org/x/oauth2"
 )
-
-func foo() {
-	ctx := context.Background()
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: "80e26ed9d2dd62b7c7b2ad018e5b1d3e625ae8ea"},
-	)
-
-	tc := oauth2.NewClient(ctx, ts)
-
-	client := github.NewClient(tc)
-
-	orgr := &github.Organization{
-		Login: github.String("Sample 1"),
-		Name:  github.String("Sample 1"),
-	}
-
-	org, resp, err := client.Admin.CreateOrg(ctx, orgr, "BernarTolosajr")
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("%v", org)
-	fmt.Printf("%v", resp)
-}
 
 func main() {
 	mongoDB := mongoDBFactory()
