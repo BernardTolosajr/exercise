@@ -1,5 +1,5 @@
-# The Chatter API
-It’s a side chatter service. As a user of this service, you would be able to comment on any GitHub organization on this particular platform.
+# The Exercise API
+It an exercise using golang, mux, mongodb and kubernetes
 ###### Hackmd link (https://hackmd.io/TPctUBDiRtKr3i5yJK3eOQ?both)
 ## Project Structure
 * db - Abstraction for the database
