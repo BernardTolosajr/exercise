@@ -45,7 +45,7 @@ func foo() {
 }
 
 func main() {
-	mongoDB := db.NewMongoDB("mongodb://localhost:27017", "thegithub")
+	mongoDB := mongoDBFactory()
 
 	r := router.New(mongoDB)
 
@@ -92,4 +92,24 @@ func main() {
 	// to finalize based on context cancellation.
 	log.Println("shutting down")
 	os.Exit(0)
+}
+
+func mongoDBFactory() *db.MongoDB {
+	var dbName string
+	var uri string
+
+	if os.Getenv("MONGO_DATABASE") != "" {
+		dbName = os.Getenv("MONGO_DATABASE")
+	} else {
+		dbName = "test"
+	}
+
+	if os.Getenv("MONGO_URI") != "" {
+		uri = os.Getenv("MONGO_URI")
+	} else {
+		uri = "mongodb://localhost:27017"
+	}
+
+	log.Infof("connected %s %s", dbName, uri)
+	return db.NewMongoDB(uri, dbName)
 }

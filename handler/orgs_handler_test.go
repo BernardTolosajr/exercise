@@ -20,7 +20,7 @@ func TestCreateNewOrganizationSuccessHandler(t *testing.T) {
 	}
 
 	payload := []byte(`{"login":"foo","profile_name":"bar","admin":"admin"}`)
-	req, err := http.NewRequest("POST", "/organizations", bytes.NewBuffer(payload))
+	req, err := http.NewRequest("POST", "/orgs", bytes.NewBuffer(payload))
 
 	if err != nil {
 		t.Fatal(err)

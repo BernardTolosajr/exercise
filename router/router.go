@@ -1,6 +1,9 @@
 package router
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/exercise/db"
 	"github.com/exercise/handler"
 	"github.com/exercise/repositories"
@@ -33,6 +36,11 @@ func New(mongoDB *db.MongoDB) *mux.Router {
 	// members handler
 	r.Handle("/orgs/{name}/members", handler.PostMemberHandler(memberService)).Methods("POST")
 	r.Handle("/orgs/{name}/members", handler.GetMembersHandler(memberService)).Methods("GET")
+	// ping
+	r.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "pong")
+	})
 
 	return r
 }

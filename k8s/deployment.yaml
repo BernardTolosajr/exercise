@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: login-svc-ap-deployment
+  namespace: cluster4
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chatter
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: chatter
+    spec:
+      containers:
+        - name: chatter-api
+          command: [
+            "/svc"
+          ]
+          image: bernardtolosa/chatter:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+            name: port
+          env:
+            - name: MONGO_DATABASE
+              value: "chatter"
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: db-uri
+                  key: db_uri
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 1.5Gi
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8080
+            initialDelaySeconds: 70
+            periodSeconds: 10
