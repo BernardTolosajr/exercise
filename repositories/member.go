@@ -21,14 +21,14 @@ type MembersRepository struct {
 }
 
 // Create member return interface and error
-func (o *MembersRepository) Create(comment *models.Member) (interface{}, error) {
+func (o *MembersRepository) Create(member *models.Member) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	comment.DateCreated = time.Now()
-	comment.DateModified = time.Now()
+	member.DateCreated = time.Now()
+	member.DateModified = time.Now()
 
-	result, err := o.MongoDB.MemberCollection.InsertOne(ctx, comment)
+	result, err := o.MongoDB.MemberCollection.InsertOne(ctx, member)
 
 	if err != nil {
 		return nil, err
@@ -45,9 +45,6 @@ func (o *MembersRepository) GetAllby(org string) ([]*models.Member, error) {
 	var results []*models.Member
 
 	options := options.Find()
-	// for now set limit 100 by default
-	// maybe in the future we can add pagination
-	options.SetLimit(100)
 	// Sort field -1 for descending
 	options.SetSort(bson.D{{"followers", -1}})
 	filter := orgAndFilter(org)

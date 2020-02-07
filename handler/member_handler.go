@@ -24,7 +24,7 @@ type MemberResponse struct {
 }
 
 type MembersResponse struct {
-	Members []*services.MemberView `json:"members,omitempty"`
+	Members []*services.MemberView `json:"members"`
 	Message string                 `json:"message,omitempty"`
 }
 
