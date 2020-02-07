@@ -13,5 +13,5 @@ type Member struct {
 	FollowingUrl string
 	DateCreated  time.Time
 	DateModified time.Time
-	DateDeleted  time.Time
+	DateDeleted  string
 }
