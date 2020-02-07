@@ -128,3 +128,38 @@ func TestGetCommentsHandlerWhenSuccessReturnArrayOfComment(t *testing.T) {
 	// make sure our depedency is called with correct parameter
 	mock.AssertCalled(t, "GetAllBy", org)
 }
+
+func TestDeleteCommentsHandlerWhenSuccess(t *testing.T) {
+	org := "foo"
+	req, err := http.NewRequest("DELETE", "/orgs/foo/comments", nil)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//Hack to fake gorilla/mux vars
+	vars := map[string]string{
+		"name": org,
+	}
+
+	req = mux.SetURLVars(req, vars)
+
+	//setup mock service
+	mock := &services.CommentServiceMock{}
+
+	mock.On("DeleteAll", org).Return(int64(1), nil)
+
+	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(DeleteCommentsHandler(mock))
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusOK, rr.Code)
+	// Check the response body is what we expect.
+	assert.Equal(t, "", rr.Body.String())
+	// make sure our depedency is called with correct parameter
+	mock.AssertCalled(t, "DeleteAll", org)
+}
