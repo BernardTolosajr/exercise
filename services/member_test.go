@@ -29,6 +29,38 @@ func TestMemberServiceCreateNewCommentWhenSuccess(t *testing.T) {
 	assert.Equal(t, 24, len(id))
 }
 
+func TestMemberServiceCreateNewCommentWhenResultIsNil(t *testing.T) {
+	mock := repositories.MemberRepositoryMock{}
+
+	member := &models.Member{
+		Org:   "org",
+		Login: "login",
+	}
+
+	mock.On("Create", member).Return(nil, nil)
+
+	service := NewMemberService(&mock)
+
+	id, _ := service.Create(member)
+	assert.Equal(t, "", id)
+}
+
+func TestMemberServiceCreateNewCommentWhenWrongObjectId(t *testing.T) {
+	mock := repositories.MemberRepositoryMock{}
+
+	member := &models.Member{
+		Org:   "org",
+		Login: "login",
+	}
+
+	mock.On("Create", member).Return("1", nil)
+
+	service := NewMemberService(&mock)
+
+	id, _ := service.Create(member)
+	assert.Equal(t, "", id)
+}
+
 func TestMemberServiceCreateNewCommentWhenFailed(t *testing.T) {
 	mock := repositories.MemberRepositoryMock{}
 
@@ -60,4 +92,32 @@ func TestMemberServiceGetAllWhenSuccessReturnArrayOfMember(t *testing.T) {
 	results, _ := service.GetAllBy(org)
 
 	assert.Equal(t, 1, len(results))
+}
+
+func TestMemberServiceGetAllWhenSuccessReturnError(t *testing.T) {
+	org := "foo"
+
+	mock := repositories.MemberRepositoryMock{}
+
+	mock.On("GetAllby", org).Return([]*models.Member{}, errors.New("ops"))
+
+	service := NewMemberService(&mock)
+
+	_, err := service.GetAllBy(org)
+
+	assert.Equal(t, "ops", err.Error())
+}
+
+func TestMemberServiceGetAllWhenSuccessReturnEmptyArray(t *testing.T) {
+	org := "foo"
+
+	mock := repositories.MemberRepositoryMock{}
+
+	mock.On("GetAllby", org).Return([]*models.Member{}, nil)
+
+	service := NewMemberService(&mock)
+
+	results, _ := service.GetAllBy(org)
+
+	assert.Equal(t, 0, len(results))
 }
