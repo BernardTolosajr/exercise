@@ -129,6 +129,39 @@ func TestGetCommentsHandlerWhenSuccessReturnArrayOfComment(t *testing.T) {
 	mock.AssertCalled(t, "GetAllBy", org)
 }
 
+func TestGetCommentsHandlerWhenFailed(t *testing.T) {
+	org := "foo"
+	req, err := http.NewRequest("GET", "/orgs/foo/comments", nil)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//Hack to fake gorilla/mux vars
+	vars := map[string]string{
+		"name": org,
+	}
+
+	req = mux.SetURLVars(req, vars)
+
+	//setup mock service
+	mock := &services.CommentServiceMock{}
+
+	comments := []*services.Comment{&services.Comment{Comment: "awesome"}}
+
+	mock.On("GetAllBy", org).Return(comments, errors.New("ops"))
+
+	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(GetCommentsHandler(mock))
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
+}
+
 func TestDeleteCommentsHandlerWhenSuccess(t *testing.T) {
 	org := "foo"
 	req, err := http.NewRequest("DELETE", "/orgs/foo/comments", nil)
@@ -162,4 +195,35 @@ func TestDeleteCommentsHandlerWhenSuccess(t *testing.T) {
 	assert.Equal(t, "", rr.Body.String())
 	// make sure our depedency is called with correct parameter
 	mock.AssertCalled(t, "DeleteAll", org)
+}
+
+func TestDeleteCommentsHandlerWhenFailed(t *testing.T) {
+	org := "foo"
+	req, err := http.NewRequest("DELETE", "/orgs/foo/comments", nil)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	//Hack to fake gorilla/mux vars
+	vars := map[string]string{
+		"name": org,
+	}
+
+	req = mux.SetURLVars(req, vars)
+
+	//setup mock service
+	mock := &services.CommentServiceMock{}
+
+	mock.On("DeleteAll", org).Return(int64(1), errors.New("ops"))
+
+	// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(DeleteCommentsHandler(mock))
+
+	// Our handlers satisfy http.Handler, so we can call their ServeHTTP method
+	// directly and pass in our Request and ResponseRecorder.
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusUnprocessableEntity, rr.Code)
 }
