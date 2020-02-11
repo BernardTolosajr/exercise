@@ -9,6 +9,7 @@ import (
 
 	"github.com/exercise/models"
 	"github.com/exercise/services"
+	"github.com/exercise/utils"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
@@ -34,7 +35,7 @@ func TestCreateNewCommentsHandlerWhenSuccess(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.CommentServiceMock{}
+	mock := &utils.CommentServiceMock{}
 
 	mock.On("Create", comment).Return("1", nil)
 
@@ -75,7 +76,7 @@ func TestCreateNewCommentsHandlerWhenFailed(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.CommentServiceMock{}
+	mock := &utils.CommentServiceMock{}
 
 	mock.On("Create", comment).Return("", errors.New("something happend"))
 
@@ -108,7 +109,7 @@ func TestGetCommentsHandlerWhenSuccessReturnArrayOfComment(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.CommentServiceMock{}
+	mock := &utils.CommentServiceMock{}
 
 	comments := []*services.Comment{&services.Comment{Comment: "awesome"}}
 
@@ -145,7 +146,7 @@ func TestGetCommentsHandlerWhenFailed(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.CommentServiceMock{}
+	mock := &utils.CommentServiceMock{}
 
 	comments := []*services.Comment{&services.Comment{Comment: "awesome"}}
 
@@ -178,7 +179,7 @@ func TestDeleteCommentsHandlerWhenSuccess(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.CommentServiceMock{}
+	mock := &utils.CommentServiceMock{}
 
 	mock.On("DeleteAll", org).Return(int64(1), nil)
 
@@ -213,7 +214,7 @@ func TestDeleteCommentsHandlerWhenFailed(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.CommentServiceMock{}
+	mock := &utils.CommentServiceMock{}
 
 	mock.On("DeleteAll", org).Return(int64(1), errors.New("ops"))
 

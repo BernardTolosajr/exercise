@@ -9,6 +9,7 @@ import (
 
 	"github.com/exercise/models"
 	"github.com/exercise/services"
+	"github.com/exercise/utils"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
@@ -36,7 +37,7 @@ func TestCreateNewMemberHandlerWhenSuccess(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.MemberServiceMock{}
+	mock := &utils.MemberServiceMock{}
 
 	mock.On("Create", member).Return("1", nil)
 
@@ -78,7 +79,7 @@ func TestCreateNewMemberHandlerWhenFailed(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.MemberServiceMock{}
+	mock := &utils.MemberServiceMock{}
 
 	mock.On("Create", member).Return("1", errors.New("ops"))
 
@@ -109,7 +110,7 @@ func TestGetMemberHandlerWhenSuccessReturnArrayOfMember(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.MemberServiceMock{}
+	mock := &utils.MemberServiceMock{}
 
 	members := []*services.MemberView{&services.MemberView{
 		Org: "theorg",
@@ -152,7 +153,7 @@ func TestGetMemberHandlerWhenFailed(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.MemberServiceMock{}
+	mock := &utils.MemberServiceMock{}
 
 	members := []*services.MemberView{&services.MemberView{
 		Org: "theorg",
@@ -187,7 +188,7 @@ func TestGetMemberHandlerWhenSuccessReturnEmptyMember(t *testing.T) {
 	req = mux.SetURLVars(req, vars)
 
 	//setup mock service
-	mock := &services.MemberServiceMock{}
+	mock := &utils.MemberServiceMock{}
 
 	members := []*services.MemberView{}
 

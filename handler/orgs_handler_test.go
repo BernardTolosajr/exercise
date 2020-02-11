@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/exercise/models"
-	"github.com/exercise/services"
+	"github.com/exercise/utils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,7 +27,7 @@ func TestCreateNewOrganizationSuccessHandler(t *testing.T) {
 	}
 
 	//setup mock service
-	mock := &services.OrganizationServiceMock{}
+	mock := &utils.OrganizationServiceMock{}
 
 	mock.On("Create", org).Return("1", nil)
 
@@ -54,7 +54,7 @@ func TestCreateNewOrganizationFailedHandler(t *testing.T) {
 	}
 
 	//setup mock service
-	mock := &services.OrganizationServiceMock{}
+	mock := &utils.OrganizationServiceMock{}
 
 	mock.On("Create", &models.Organization{
 		Login:       "foo",

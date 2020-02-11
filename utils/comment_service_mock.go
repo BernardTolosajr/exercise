@@ -1,7 +1,8 @@
-package services
+package utils
 
 import (
 	"github.com/exercise/models"
+	"github.com/exercise/services"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -19,7 +20,7 @@ func (o *CommentServiceMock) DeleteAll(org string) (int64, error) {
 	return args.Get(0).(int64), args.Error(1)
 }
 
-func (o *CommentServiceMock) GetAllBy(org string) ([]*Comment, error) {
+func (o *CommentServiceMock) GetAllBy(org string) ([]*services.Comment, error) {
 	args := o.Called(org)
-	return args.Get(0).([]*Comment), args.Error(1)
+	return args.Get(0).([]*services.Comment), args.Error(1)
 }

@@ -1,7 +1,8 @@
-package services
+package utils
 
 import (
 	"github.com/exercise/models"
+	"github.com/exercise/services"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -9,9 +10,9 @@ type MemberServiceMock struct {
 	mock.Mock
 }
 
-func (m *MemberServiceMock) GetAllBy(org string) ([]*MemberView, error) {
+func (m *MemberServiceMock) GetAllBy(org string) ([]*services.MemberView, error) {
 	args := m.Called(org)
-	return args.Get(0).([]*MemberView), args.Error(1)
+	return args.Get(0).([]*services.MemberView), args.Error(1)
 }
 
 func (m *MemberServiceMock) Create(member *models.Member) (string, error) {
