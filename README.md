@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/BernardTolosajr/exercise/branch/master/graph/badge.svg)](https://codecov.io/gh/BernardTolosajr/exercise)
 
 It's an exercise using golang, mux, mongodb and kubernetes
-###### Hackmd link (https://hackmd.io/TPctUBDiRtKr3i5yJK3eOQ?both)
+
 ## Project Structure
 * db - Abstraction for the database
 * handler - Handler for the http
