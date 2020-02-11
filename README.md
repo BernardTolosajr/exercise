@@ -10,8 +10,9 @@ It's an exercise using golang, mux, mongodb and kubernetes
 * handler - Handler for the http
 * models - DB models
 * repositories - Persistence layer.
-* router -  dispatcher to their respective handler
+* router -  Dispatcher to their respective handler
 * services - Bussiness logic
+* test - Additional test suits like integration and e2e
 * main.go - Entry point
 * Dockerfile
 * k8s - Kubernetes deployment manifest
