@@ -4,11 +4,13 @@ go 1.13
 
 require (
 	github.com/DataDog/zstd v1.4.4 // indirect
+	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/google/go-github/v29 v29.0.2
 	github.com/gorilla/mux v1.7.3
+	github.com/kr/pretty v0.2.0 // indirect
 	github.com/meatballhat/negroni-logrus v1.1.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.4.2
